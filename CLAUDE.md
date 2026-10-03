@@ -19,6 +19,17 @@ If something in the spec is impossible or wrong, explain and propose an alternat
 - Grand total **"الإجمالي الكلي"** on the **last page only**. Page numbers **"صفحة X من Y"**. Paper **A4 landscape**.
 - Public, no password (optional `APP_PASSWORD` Basic Auth exists, empty = off). Hosting: Oracle Always Free Arm VM + Docker + Caddy + DuckDNS; Cloud Run fallback.
 
+## Approved Phase 0 PDF design (owner-approved 2026-10-04 — supersedes the §8 starting values)
+- Font: **Noto Sans Arabic** (+ Noto Sans fallback). Naskh is bundled but not used.
+- A4 landscape, margins **8 mm top/sides, 12 mm bottom** (page number lives in the bottom margin).
+- Body text **8.5 pt**; rows **7 mm** (header + 20 + footer); cell padding 1.1 mm.
+- Tables **138.5 mm** wide, **4 mm** gap. Columns: name 58.5, qty 20, price 22.5, discount 13, total 24.5 mm.
+- Layout by **absolute positioning** inside a fixed-height page block (floats are unreliable in WeasyPrint).
+- Numeric columns **right-aligned** (decimal points line up), tabular nums, each number in `<bdi dir="ltr">`.
+- Zero discount prints **`0%`**.
+- Name overflow safety net: WeasyPrint's `text-overflow: ellipsis` is broken for RTL lines, so names with no Arabic
+  letters get `dir="ltr"` + ellipsis; names containing Arabic stay RTL and clip at their end (no ellipsis).
+
 ## Stack (§3)
 - Python 3.12, FastAPI + Uvicorn, Pydantic v2 (`Decimal`), Jinja2 (autoescape ON), WeasyPrint, vanilla JS + vendored `big.js`.
 - Fonts: bundled Noto Sans Arabic + Noto Sans TTFs (+ OFL) via `@font-face` only.
