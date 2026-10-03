@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>فاتورة</title>
+<style>.items th, .items td { height: {{ invoice.row_height }}; }</style>
+</head>
+<body>
+{% for page in invoice.pages %}
+<section class="page">
+  <header class="band">
+    <h1 class="title">فاتورة</h1>
+    <p class="date">التاريخ: <bdi dir="ltr">{{ invoice.date }}</bdi></p>
+  </header>
+  {% for table in page.tables %}
+  <table class="items items--{{ table.side }}">
+    <colgroup>
+      <col class="col-name"><col class="col-qty"><col class="col-price"><col class="col-disc"><col class="col-total">
+    </colgroup>
+    <thead>
+      <tr><th>اسم الصنف</th><th>الكمية</th><th>السعر</th><th>الخصم</th><th>الإجمالي</th></tr>
+    </thead>
+    <tbody>
+    {% for row in table.rows %}
+      <tr>
+        <td class="name" dir="{{ row.name_dir }}">{{ row.name }}</td>
+        <td class="num"><bdi dir="ltr">{{ row.quantity }}</bdi></td>
+        <td class="num"><bdi dir="ltr">{{ row.unit_price }}</bdi></td>
+        <td class="num"><bdi dir="ltr">{{ row.discount }}</bdi></td>
+        <td class="num"><bdi dir="ltr">{{ row.total }}</bdi></td>
+      </tr>
+    {% endfor %}
+    {% for _ in range(table.padding_count) %}
+      <tr class="pad"><td></td><td></td><td></td><td></td><td></td></tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td class="label" colspan="4">الإجمالي المتراكم</td>
+        <td class="num"><bdi dir="ltr">{{ table.running_total }}</bdi></td>
+      </tr>
+    </tfoot>
+  </table>
+  {% endfor %}
+  <div class="summary">
+  {% if page.is_last %}
+    <div class="grand-total">
+      <span class="label">الإجمالي الكلي</span>
+      <span class="amount"><bdi dir="ltr">{{ invoice.grand_total }}</bdi></span>
+    </div>
+  {% endif %}
+  </div>
+</section>
+{% endfor %}
+</body>
+</html>

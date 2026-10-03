@@ -1,0 +1,395 @@
+{
+ "date": "2026-10-03",
+ "items": [
+  {
+   "name": "سكر أبيض",
+   "quantity": "2.5",
+   "unit_price": "45.00",
+   "discount_percent": "10"
+  },
+  {
+   "name": "أرز بسمتي هندي فاخر",
+   "quantity": "10",
+   "unit_price": "62.75",
+   "discount_percent": "0"
+  },
+  {
+   "name": "زيت زيتون بكر ممتاز 1 لتر",
+   "quantity": "3",
+   "unit_price": "189.90",
+   "discount_percent": "5"
+  },
+  {
+   "name": "شاشة Samsung 55 بوصة",
+   "quantity": "1",
+   "unit_price": "18999.00",
+   "discount_percent": "12.5"
+  },
+  {
+   "name": "كابل HDMI 2.1 طول 3م",
+   "quantity": "4",
+   "unit_price": "149.50",
+   "discount_percent": "0"
+  },
+  {
+   "name": "شاي",
+   "quantity": "12",
+   "unit_price": "7.25",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مكنسة كهربائية لاسلكية Dyson V15 وملحقات",
+   "quantity": "1",
+   "unit_price": "32450.00",
+   "discount_percent": "8"
+  },
+  {
+   "name": "دقيق أبيض متعدد الاستخدامات",
+   "quantity": "25",
+   "unit_price": "18.40",
+   "discount_percent": "2.5"
+  },
+  {
+   "name": "علبة مناديل هدية",
+   "quantity": "2",
+   "unit_price": "0",
+   "discount_percent": ""
+  },
+  {
+   "name": "مكرونة اسباجيتي",
+   "quantity": "6",
+   "unit_price": "14.99",
+   "discount_percent": "100"
+  },
+  {
+   "name": "ثلاجة توشيبا نوفروست 18 قدم لون فضي لامع",
+   "quantity": "1",
+   "unit_price": "27800.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "جبنة رومي معتقة",
+   "quantity": "0.125",
+   "unit_price": "480.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "لابتوب Lenovo ThinkPad X1 Carbon",
+   "quantity": "2",
+   "unit_price": "64500.00",
+   "discount_percent": "7"
+  },
+  {
+   "name": "حليب كامل الدسم 1 لتر",
+   "quantity": "24",
+   "unit_price": "32.50",
+   "discount_percent": "0"
+  },
+  {
+   "name": "بيض بلدي",
+   "quantity": "30",
+   "unit_price": "4.75",
+   "discount_percent": "0"
+  },
+  {
+   "name": "حقيبة ظهر مدرسية مقاومة للماء جيب لابتوب",
+   "quantity": "3",
+   "unit_price": "425.00",
+   "discount_percent": "15"
+  },
+  {
+   "name": "ماوس Logitech MX Master 3S",
+   "quantity": "2",
+   "unit_price": "3999.99",
+   "discount_percent": "0"
+  },
+  {
+   "name": "تمر سكري",
+   "quantity": "1.5",
+   "unit_price": "95.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "صابون سائل لليدين",
+   "quantity": "8",
+   "unit_price": "27.35",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مجموعة شوكولاتة سويسرية فاخرة علبة هدايا",
+   "quantity": "5",
+   "unit_price": "750.00",
+   "discount_percent": "20"
+  },
+  {
+   "name": "عدس أصفر",
+   "quantity": "4.25",
+   "unit_price": "38.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "معجون أسنان",
+   "quantity": "6",
+   "unit_price": "22.90",
+   "discount_percent": "0"
+  },
+  {
+   "name": "iPhone 15 Pro Max 256GB",
+   "quantity": "1",
+   "unit_price": "72999.00",
+   "discount_percent": "3"
+  },
+  {
+   "name": "خبز",
+   "quantity": "10",
+   "unit_price": "2.50",
+   "discount_percent": "0"
+  },
+  {
+   "name": "فول مدمس معلب",
+   "quantity": "12",
+   "unit_price": "11.75",
+   "discount_percent": "0"
+  },
+  {
+   "name": "منظف أرضيات برائحة الليمون 3 لتر",
+   "quantity": "2",
+   "unit_price": "64.95",
+   "discount_percent": "0"
+  },
+  {
+   "name": "توريد محطة طاقة شمسية متكاملة",
+   "quantity": "1",
+   "unit_price": "125000.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "زبدة طبيعية",
+   "quantity": "0.5",
+   "unit_price": "210.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مسامير صغيرة",
+   "quantity": "999999.999",
+   "unit_price": "0.01",
+   "discount_percent": "0"
+  },
+  {
+   "name": "كاتشب Heinz",
+   "quantity": "3",
+   "unit_price": "19.50",
+   "discount_percent": "0"
+  },
+  {
+   "name": "أكياس قمامة كبيرة",
+   "quantity": "5",
+   "unit_price": "15.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مولد كهرباء صناعي",
+   "quantity": "1",
+   "unit_price": "87500.00",
+   "discount_percent": "2.5"
+  },
+  {
+   "name": "ملح طعام",
+   "quantity": "2",
+   "unit_price": "3.25",
+   "discount_percent": "0"
+  },
+  {
+   "name": "عصير برتقال طبيعي",
+   "quantity": "6",
+   "unit_price": "17.80",
+   "discount_percent": "12.5"
+  },
+  {
+   "name": "طابعة HP LaserJet Pro M404dn",
+   "quantity": "1",
+   "unit_price": "15750.00",
+   "discount_percent": "6.25"
+  },
+  {
+   "name": "سمن بلدي",
+   "quantity": "1",
+   "unit_price": "360.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "ورق تصوير A4 كرتونة",
+   "quantity": "4",
+   "unit_price": "1150.00",
+   "discount_percent": "10"
+  },
+  {
+   "name": "ميكروويف",
+   "quantity": "1",
+   "unit_price": "4890.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "بهارات مشكلة",
+   "quantity": "0.25",
+   "unit_price": "160.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "كراتين تغليف",
+   "quantity": "50",
+   "unit_price": "6.20",
+   "discount_percent": "0"
+  },
+  {
+   "name": "شامبو",
+   "quantity": "3",
+   "unit_price": "54.99",
+   "discount_percent": "33.33"
+  },
+  {
+   "name": "مكيف شارب 1.5 حصان بارد ساخن",
+   "quantity": "2",
+   "unit_price": "21500.00",
+   "discount_percent": "5"
+  },
+  {
+   "name": "فلفل أسود مطحون",
+   "quantity": "0.75",
+   "unit_price": "140.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مياه معدنية 6 عبوات",
+   "quantity": "10",
+   "unit_price": "21.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "سماعات Sony لاسلكية عازلة للضوضاء - أسود",
+   "quantity": "1",
+   "unit_price": "14999.00",
+   "discount_percent": "10"
+  },
+  {
+   "name": "زيت دوار الشمس 1.5 لتر",
+   "quantity": "6",
+   "unit_price": "74.50",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مناديل مطبخ",
+   "quantity": "4",
+   "unit_price": "39.99",
+   "discount_percent": "0"
+  },
+  {
+   "name": "شاحن Anker USB-C سريع 65 وات",
+   "quantity": "2",
+   "unit_price": "1450.00",
+   "discount_percent": "10"
+  },
+  {
+   "name": "أرز مصري",
+   "quantity": "15",
+   "unit_price": "33.50",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مكرونة قلم",
+   "quantity": "8",
+   "unit_price": "16.25",
+   "discount_percent": "0"
+  },
+  {
+   "name": "صلصة طماطم",
+   "quantity": "12",
+   "unit_price": "9.75",
+   "discount_percent": "5"
+  },
+  {
+   "name": "بن تركي محوج",
+   "quantity": "0.5",
+   "unit_price": "640.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "مجموعة أكواب زجاجية شفافة مقاومة للحرارة",
+   "quantity": "2",
+   "unit_price": "389.00",
+   "discount_percent": "15"
+  },
+  {
+   "name": "لمبة LED موفرة 12 وات",
+   "quantity": "20",
+   "unit_price": "45.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "عسل نحل",
+   "quantity": "1",
+   "unit_price": "275.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "كيبورد ميكانيكي Keychron K2 إضاءة RGB",
+   "quantity": "1",
+   "unit_price": "4999.00",
+   "discount_percent": "12.5"
+  },
+  {
+   "name": "سجادة صلاة",
+   "quantity": "3",
+   "unit_price": "150.00",
+   "discount_percent": "100"
+  },
+  {
+   "name": "مسحوق غسيل أوتوماتيك 6 كجم",
+   "quantity": "2",
+   "unit_price": "289.90",
+   "discount_percent": "0"
+  },
+  {
+   "name": "تونة قطع",
+   "quantity": "24",
+   "unit_price": "28.75",
+   "discount_percent": "0"
+  },
+  {
+   "name": "بطارية AA",
+   "quantity": "16",
+   "unit_price": "12.50",
+   "discount_percent": "0"
+  },
+  {
+   "name": "خل أبيض",
+   "quantity": "3",
+   "unit_price": "11.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "جبنة شيدر",
+   "quantity": "0.75",
+   "unit_price": "520.00",
+   "discount_percent": "0"
+  },
+  {
+   "name": "ماكينة قهوة ديلونجي إسبريسو أوتوماتيك",
+   "quantity": "1",
+   "unit_price": "18750.00",
+   "discount_percent": "7.5"
+  },
+  {
+   "name": "كوب",
+   "quantity": "6",
+   "unit_price": "0",
+   "discount_percent": "0"
+  },
+  {
+   "name": "ورق ألومنيوم 30 متر",
+   "quantity": "5",
+   "unit_price": "62.00",
+   "discount_percent": "0"
+  }
+ ]
+}
