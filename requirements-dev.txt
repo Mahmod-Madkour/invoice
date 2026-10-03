@@ -1,0 +1,15 @@
+# Development / test dependencies — exact pins. Includes the runtime set.
+# Direct: pytest, hypothesis, pypdf, httpx (FastAPI TestClient), watchfiles (uvicorn --reload).
+-r requirements.txt
+certifi==2026.7.22
+httpcore==1.0.9
+httpx==0.28.1
+hypothesis==6.168.3
+iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0
+Pygments==2.21.0
+pypdf==6.19.0
+pytest==9.1.1
+sortedcontainers==2.4.0
+watchfiles==1.3.0
