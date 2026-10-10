@@ -1,0 +1,27 @@
+# Runs the full test suite inside Docker on every push and pull request,
+# then checks that the production image still builds.
+name: tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build the dev/test image
+        run: docker compose -f compose.dev.yml build tests
+
+      - name: Run the tests
+        # Run as the runner's user so pytest/hypothesis caches can be written in the checkout.
+        run: docker compose -f compose.dev.yml run --rm --user "$(id -u):$(id -g)" tests
+
+      - name: Build the production image
+        run: docker build --target prod -t invoice-app:ci .

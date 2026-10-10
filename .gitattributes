@@ -1,0 +1,5 @@
+# Keep LF line endings everywhere (a CRLF in .env or the Caddyfile breaks values on Linux servers).
+* text=auto eol=lf
+*.ttf binary
+*.pdf binary
+*.png binary

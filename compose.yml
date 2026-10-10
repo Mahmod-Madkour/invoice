@@ -7,6 +7,13 @@
 
 name: invoice
 
+# Docker keeps container logs forever by default; cap them so the VM disk never fills up.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   app:
     build:
@@ -14,6 +21,7 @@ services:
       target: prod
     image: invoice-app:latest
     restart: unless-stopped
+    logging: *logging
     env_file: .env
     networks:
       - internal
@@ -27,6 +35,7 @@ services:
   caddy:
     image: caddy:2
     restart: unless-stopped
+    logging: *logging
     depends_on:
       app:
         condition: service_healthy
