@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import datetime
 import json
 from pathlib import Path
 
-from app.domain.models import Invoice, LineItem, clean_name
-from app.domain.numbers import parse_decimal
+from app.api.schemas import InvoiceRequest
+from app.domain.models import Invoice
 
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
@@ -21,16 +20,9 @@ def load_fixture(name: str) -> dict:
     return json.loads(fixture_path(name).read_text(encoding="utf-8"))
 
 
-def payload_to_invoice(payload: dict) -> Invoice:
-    """Strict conversion of a valid fixture payload; any invalid value raises."""
-    items = []
-    for raw in payload["items"]:
-        values = [parse_decimal(raw[key] or "0") for key in ("quantity", "unit_price", "discount_percent")]
-        if any(v is None for v in values):
-            raise ValueError(f"invalid number in fixture row {raw!r}")
-        quantity, unit_price, discount = values
-        items.append(LineItem(clean_name(raw["name"]), quantity, unit_price, discount))
-    return Invoice(date=datetime.date.fromisoformat(payload["date"]), items=tuple(items))
+def payload_to_invoice(payload: dict, max_items: int = 1000) -> Invoice:
+    """Convert a fixture through the real request validation (the same path as the API)."""
+    return InvoiceRequest.model_validate(payload).to_invoice(max_items)
 
 
 def fixture_invoice(name: str) -> Invoice:

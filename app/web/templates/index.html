@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>فاتورة</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/vendor/big.min.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body data-max-items="{{ max_items }}" data-rows-per-page="{{ rows_per_page }}">
+  <header class="topbar">
+    <h1 class="title">فاتورة</h1>
+    <div class="date-field">
+      <label for="invoice-date">التاريخ</label>
+      <input type="date" id="invoice-date" class="in" required>
+      <p class="field-error" id="date-error" hidden></p>
+    </div>
+    <button type="button" id="clear-all" class="btn btn-secondary">مسح الكل</button>
+  </header>
+
+  <main class="content">
+    <div class="banner" id="banner" role="alert" hidden></div>
+    <div class="grid-wrap">
+      <table class="grid" id="grid">
+        <thead>
+          <tr>
+            <th class="c-no" scope="col">#</th>
+            <th class="c-name" scope="col">اسم الصنف</th>
+            <th class="c-qty" scope="col">الكمية</th>
+            <th class="c-price" scope="col">السعر</th>
+            <th class="c-disc" scope="col">الخصم %</th>
+            <th class="c-total" scope="col">الإجمالي</th>
+            <th class="c-del" scope="col"><span class="visually-hidden">حذف</span></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="footer-bar">
+    <div class="stat">
+      <span class="stat-label">عدد الأصناف:</span>
+      <bdi id="item-count">0</bdi>
+    </div>
+    <div class="stat" id="page-preview"></div>
+    <button type="button" class="error-count" id="error-count" hidden></button>
+    <div class="grand">
+      <span class="stat-label">الإجمالي الكلي:</span>
+      <bdi dir="ltr" id="grand-total">0.00</bdi>
+    </div>
+    <button type="button" id="generate" class="btn btn-primary" disabled>
+      <span class="spinner" aria-hidden="true" hidden></span>
+      <span class="btn-label">إنشاء PDF</span>
+    </button>
+  </footer>
+
+  <div class="toast" id="toast" role="status" hidden>
+    <span id="toast-text">تم حذف الصنف</span>
+    <button type="button" id="toast-undo" class="btn btn-link">تراجع</button>
+  </div>
+
+  <template id="row-template">
+    <tr class="row">
+      <td class="c-no"><span class="row-no"></span></td>
+      <td class="c-name">
+        <input class="in" data-field="name" type="text" maxlength="40" autocomplete="off" aria-label="اسم الصنف">
+        <span class="counter" hidden></span>
+        <p class="field-error" hidden></p>
+      </td>
+      <td class="c-qty">
+        <input class="in num" data-field="quantity" type="text" inputmode="decimal" autocomplete="off" dir="ltr" aria-label="الكمية">
+        <p class="field-error" hidden></p>
+      </td>
+      <td class="c-price">
+        <input class="in num" data-field="unit_price" type="text" inputmode="decimal" autocomplete="off" dir="ltr" aria-label="السعر">
+        <p class="field-error" hidden></p>
+      </td>
+      <td class="c-disc">
+        <input class="in num" data-field="discount_percent" type="text" inputmode="decimal" autocomplete="off" dir="ltr" placeholder="0" aria-label="الخصم %">
+        <p class="field-error" hidden></p>
+      </td>
+      <td class="c-total">
+        <bdi class="row-total" dir="ltr"></bdi>
+        <p class="field-error" hidden></p>
+      </td>
+      <td class="c-del">
+        <button type="button" class="del" tabindex="-1" aria-label="حذف الصنف" title="حذف الصنف">×</button>
+      </td>
+    </tr>
+  </template>
+</body>
+</html>

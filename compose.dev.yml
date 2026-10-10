@@ -16,13 +16,15 @@ x-dev: &dev
   user: "${UID:-1000}:${GID:-1000}"
   environment:
     HOME: /tmp
-    ENABLE_API_DOCS: "true"
-    LOG_LEVEL: debug
 
 services:
   app:
     <<: *dev
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app --no-access-log
+    environment:
+      HOME: /tmp
+      ENABLE_API_DOCS: "true"
+      LOG_LEVEL: debug
     ports:
       - "8000:8000"
 
