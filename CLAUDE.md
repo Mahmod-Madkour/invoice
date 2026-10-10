@@ -30,6 +30,12 @@ If something in the spec is impossible or wrong, explain and propose an alternat
 - Name overflow safety net: WeasyPrint's `text-overflow: ellipsis` is broken for RTL lines, so names with no Arabic
   letters get `dir="ltr"` + ellipsis; names containing Arabic stay RTL and clip at their end (no ellipsis).
 
+## Later owner decisions (2026-10-10)
+- **One uvicorn worker** (not the spec's 2): the rate limiter and render semaphore are in memory, so one process keeps them exact.
+- The optional **GitHub Actions** workflow (`.github/workflows/tests.yml`) was approved.
+- Arabic-Indic digits typed **inside item names are kept as typed** (only numeric fields are normalized).
+- The Dockerfile uses **no BuildKit-only features** (no `RUN --mount`), so it also builds with the classic builder (Cloud Build).
+
 ## Stack (§3)
 - Python 3.12, FastAPI + Uvicorn, Pydantic v2 (`Decimal`), Jinja2 (autoescape ON), WeasyPrint, vanilla JS + vendored `big.js`.
 - Fonts: bundled Noto Sans Arabic + Noto Sans TTFs (+ OFL) via `@font-face` only.
