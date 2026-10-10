@@ -94,6 +94,11 @@ def test_fully_empty_rows_are_ignored_but_keep_row_numbers(api):
     assert errors(r) == [(3, "quantity", MSG_QUANTITY_NOT_NUMBER)]
 
 
+def test_rows_of_invisible_characters_count_as_blank(api):
+    invisible = {"name": "\ufeff", "quantity": "\ufeff", "unit_price": "\u200f", "discount_percent": "\x85"}
+    assert api.post(URL, json=body(item(), invisible)).status_code == 200
+
+
 def test_derived_fields_sent_by_the_client_are_ignored(api):
     tampered = item(quantity="2", unit_price="10.00", discount_percent="0", total="999999.00", gross="1", discount_amount="5")
     r = api.post(URL, json=body(tampered) | {"grand_total": "999999.00"})
@@ -129,6 +134,10 @@ def test_pdf_respects_configured_pagination():
         (item(unit_price="-0.01"), "unit_price", MSG_PRICE_NOT_NUMBER),
         (item(unit_price="1.001"), "unit_price", MSG_PRICE_INVALID),
         (item(unit_price="10000000.01"), "unit_price", MSG_PRICE_INVALID),
+        # > 28 significant digits must not be rounded into an "allowed" number of decimals.
+        (item(quantity="1.0049999999999999999999999999"), "quantity", MSG_QUANTITY_INVALID),
+        (item(unit_price="1.0099999999999999999999999999"), "unit_price", MSG_PRICE_INVALID),
+        (item(discount_percent="12.000000000000000000000000001"), "discount_percent", MSG_DISCOUNT_INVALID),
         (item(discount_percent="x"), "discount_percent", MSG_DISCOUNT_INVALID),
         (item(discount_percent="-1"), "discount_percent", MSG_DISCOUNT_INVALID),
         (item(discount_percent="100.01"), "discount_percent", MSG_DISCOUNT_INVALID),

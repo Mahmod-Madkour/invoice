@@ -1,6 +1,6 @@
-# syntax=docker/dockerfile:1.7
-#
 # Multi-arch (linux/amd64 + linux/arm64) image for the invoice app.
+# Plain Dockerfile syntax only (no BuildKit-only features), so it also builds on hosts that use the
+# classic builder — e.g. Cloud Build behind `gcloud run deploy --source`.
 #   docker build --target prod -t invoice-app .     # production (default target)
 #   docker build --target dev  -t invoice-app:dev . # tests / auto-reload dev server
 
@@ -15,7 +15,8 @@ FROM ${PYTHON_IMAGE} AS base
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_ROOT_USER_ACTION=ignore
+    PIP_ROOT_USER_ACTION=ignore \
+    PIP_NO_CACHE_DIR=1
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -36,8 +37,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt requirements-dev.txt ./
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements-dev.txt
+RUN pip install -r requirements-dev.txt
 
 # ---------------------------------------------------------------------------
 # prod: runtime dependencies only, non-root user, healthcheck.
@@ -45,8 +45,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 FROM base AS prod
 
 COPY requirements.txt ./
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY app ./app
 

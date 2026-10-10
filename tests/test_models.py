@@ -66,6 +66,7 @@ def test_floats_are_rejected(field):
         {"disc": "-1"},
         {"disc": "100.01"},
         {"disc": "12.345"},
+        {"qty": "1.0049999999999999999999999999"},  # 28 decimals, not 3
         {"qty": "100", "price": "10000000", "disc": "0"},  # line total 1,000,000,000.00 > max
         {"name": ""},
         {"name": "x" * (NAME_MAX_LENGTH + 1)},
@@ -104,6 +105,9 @@ def test_line_item_accepts_boundary_values(kwargs):
         (" شاي ", "شاي"),
         ("شاشة Samsung 55 بوصة", "شاشة Samsung 55 بوصة"),
         ("   ", ""),
+        ("\ufeff", ""),  # BOM is dropped (the browser does the same)
+        ("a\ufeffb", "ab"),
+        ("a\x1cb\x85c", "a b c"),  # Python-only whitespace becomes a space on both sides
     ],
 )
 def test_clean_name(raw, expected):

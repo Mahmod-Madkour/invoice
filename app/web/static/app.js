@@ -55,16 +55,22 @@
   "٠١٢٣٤٥٦٧٨٩".split("").forEach(function (ch, i) { DIGIT_MAP[ch] = String(i); });
   "۰۱۲۳۴۵۶۷۸۹".split("").forEach(function (ch, i) { DIGIT_MAP[ch] = String(i); });
   var DIGITS_RE = /[٠-٩۰-۹٫]/g;
-  // Thousands separators (Arabic ٬ and ",") and invisible bidi marks are removed.
-  var REMOVE_RE = /[٬,‎‏؜‪-‮⁦-⁩]/g;
+  // Thousands separators (Arabic \u066c and ",") and invisible marks (bidi controls, BOM) are removed.
+  var REMOVE_RE = /[\u066c,\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069\ufeff]/g;
   var CONTROL_RE = /[\u0000-\u001f\u007f-\u009f]/g;
-  var RTL_RE = /[֐-ࣿיִ-﷿ﹰ-ﻼ]/;
+  // Python's str.isspace() set: JS \s plus U+001C-U+001F and U+0085 (U+FEFF is removed before use).
+  var SPACE = "\\s\\x1c-\\x1f\\x85";
+  var SPACE_CHAR_RE = new RegExp("^[" + SPACE + "]$");
+  var SPACES_RE = new RegExp("[" + SPACE + "]+");
+  var TRIM_RE = new RegExp("^[" + SPACE + "]+|[" + SPACE + "]+$", "g");
+  var BOM_RE = /\ufeff/g;
+  var RTL_RE = /[\u0590-\u08ff\ufb1d-\ufdff\ufe70-\ufefc]/;  // Hebrew and Arabic blocks
 
   function normalizeNumber(text) {
     return String(text || "")
       .replace(DIGITS_RE, function (ch) { return DIGIT_MAP[ch]; })
       .replace(REMOVE_RE, "")
-      .trim();
+      .replace(TRIM_RE, "");
   }
 
   /** Big for a plain number, or null when blank / not a number. */
@@ -81,8 +87,9 @@
 
   function cleanName(raw) {
     return String(raw || "")
-      .replace(CONTROL_RE, function (ch) { return /\s/.test(ch) ? " " : ""; })
-      .split(/\s+/)
+      .replace(BOM_RE, "")
+      .replace(CONTROL_RE, function (ch) { return SPACE_CHAR_RE.test(ch) ? " " : ""; })
+      .split(SPACES_RE)
       .filter(Boolean)
       .join(" ");
   }

@@ -30,9 +30,14 @@ class DomainError(ValueError):
 
 
 def clean_name(raw: str) -> str:
-    """Trim, collapse internal whitespace, and drop control characters."""
+    """Trim, collapse internal whitespace (Python's ``str.isspace`` set), drop control characters and BOMs.
+
+    Mirrored by ``cleanName`` in app.js — keep identical.
+    """
     without_controls = "".join(
-        " " if ch.isspace() else ch for ch in raw if ch.isspace() or unicodedata.category(ch) != "Cc"
+        " " if ch.isspace() else ch
+        for ch in raw
+        if ch != "\ufeff" and (ch.isspace() or unicodedata.category(ch) != "Cc")
     )
     return " ".join(without_controls.split())
 

@@ -18,7 +18,7 @@ def make_items(n: int, seed: int = 0) -> list[LineItem]:
             name=f"صنف {k + 1}",
             quantity=Decimal(rng.randint(1, 5000)) / 1000,
             unit_price=Decimal(rng.randint(0, 100_000)) / 100,
-            discount_percent=Decimal(rng.choice([0, 0, 0, 5, 10, 12.5, 100])).quantize(Decimal("0.01")),
+            discount_percent=Decimal(rng.choice(["0", "0", "0", "5", "10", "12.5", "100"])),
         )
         for k in range(n)
     ]

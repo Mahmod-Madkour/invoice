@@ -13,8 +13,9 @@ x-dev: &dev
   working_dir: /srv
   volumes:
     - .:/srv
-  # Write generated files (samples/, caches) as your host user on Linux.
-  # Docker Desktop (Windows/macOS) maps ownership automatically.
+  # Runs as uid/gid 1000 (the usual first Linux user) so generated files (samples/, caches) are not
+  # owned by root. UID/GID are only used if exported; otherwise pass `--user "$(id -u):$(id -g)"` to
+  # `docker compose run` (see README). Docker Desktop (Windows/macOS) maps ownership automatically.
   user: "${UID:-1000}:${GID:-1000}"
   environment:
     HOME: /tmp

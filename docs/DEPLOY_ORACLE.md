@@ -214,11 +214,15 @@ cd ~/invoice-app
 For a private GitHub repository, use a *fine-grained personal access token* with read access as the
 password when `git clone` asks.
 
-**Without Git:** copy the folder from your computer (run this **on your computer**, inside the project folder's parent):
+**Without Git:** copy the folder from your computer (run this **on your computer**, in the folder that
+*contains* the project folder):
 
 ```bash
-scp -i ~/.ssh/oracle_invoice -r ./Invoice ubuntu@PUBLIC_IP:~/invoice-app
+scp -i ~/.ssh/oracle_invoice -r ./YOUR_PROJECT_FOLDER ubuntu@PUBLIC_IP:~/invoice-app
 ```
+
+This copies everything in the folder, including a local `.env` and `samples/` if you have them —
+that's harmless: you edit `.env` on the VM in the next step anyway.
 
 ### 6b. Configure
 

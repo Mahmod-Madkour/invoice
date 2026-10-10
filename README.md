@@ -25,6 +25,11 @@ Everything runs in Docker, on every operating system — you do not need Python 
 All commands below are typed in a terminal (PowerShell on Windows) **inside the project folder**.
 They are identical on Windows, macOS and Linux.
 
+> **Linux only:** the dev containers run as user id 1000. If `id -u` prints something else, add
+> `--user "$(id -u):$(id -g)"` after `run --rm` in the test and sample commands, e.g.
+> `docker compose -f compose.dev.yml run --rm --user "$(id -u):$(id -g)" tests` — otherwise the
+> container cannot write `samples/` or its caches into your folder.
+
 > The first build downloads Python packages and takes a few minutes. Later starts are instant.
 
 ---

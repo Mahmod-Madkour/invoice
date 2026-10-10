@@ -7,6 +7,7 @@ in ``app/web/static/app.js`` — keep the two implementations identical.
 from __future__ import annotations
 
 import datetime
+import decimal
 import re
 from decimal import ROUND_HALF_UP, Decimal
 
@@ -16,10 +17,10 @@ _TRANSLATE = str.maketrans(
     "٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹٫",
     "01234567890123456789.",
 )
-# Thousands separators (Arabic U+066C and the ASCII comma) and invisible bidi marks that
-# Arabic keyboards and copy/paste insert (LRM, RLM, ALM, embeddings/isolates) are removed.
+# Thousands separators (Arabic U+066C and the ASCII comma) and invisible characters that Arabic
+# keyboards and copy/paste insert (LRM, RLM, ALM, bidi embeddings/isolates, BOM U+FEFF) are removed.
 _REMOVE = dict.fromkeys(
-    map(ord, "٬,‎‏؜‪‫‬‭‮⁦⁧⁨⁩"),
+    map(ord, "\u066c,\u200e\u200f\u061c\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069\ufeff"),
 )
 _REMOVE_AND_TRANSLATE = {**_TRANSLATE, **_REMOVE}
 
@@ -51,8 +52,14 @@ def parse_decimal(text: str) -> Decimal | None:
 
 
 def decimal_places(value: Decimal) -> int:
-    """Significant fractional digits: ``2.50`` → 1, ``45.000`` → 0, ``0.125`` → 3."""
-    exponent = value.normalize().as_tuple().exponent
+    """Significant fractional digits: ``2.50`` → 1, ``45.000`` → 0, ``0.125`` → 3.
+
+    ``normalize()`` runs with a precision equal to the number's own digit count, so it only strips
+    trailing zeros and never rounds (the default 28-digit context would turn
+    ``1.0049999999999999999999999999`` into ``1.005`` and hide the extra decimals).
+    """
+    exact = decimal.Context(prec=max(1, len(value.as_tuple().digits)))
+    exponent = value.normalize(exact).as_tuple().exponent
     assert isinstance(exponent, int), "special values are never parsed"
     return max(0, -exponent)
 

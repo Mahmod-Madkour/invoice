@@ -26,9 +26,11 @@ from app.domain.numbers import (
         ("1,250.50", "1250.50"),  # comma thousands separator
         ("١2٣", "123"),  # mixed digit systems
         ("  12.5 \t", "12.5"),  # surrounding whitespace
-        (" 12 ", "12"),  # no-break spaces
-        ("‏١٢‎", "12"),  # RLM/LRM inserted by Arabic keyboards
-        ("؜5", "5"),  # Arabic letter mark
+        ("\u00a012\u00a0", "12"),  # no-break spaces
+        ("\u200f\u0661\u0662\u200e", "12"),  # RLM/LRM inserted by Arabic keyboards
+        ("\u061c5", "5"),  # Arabic letter mark
+        ("\ufeff12\ufeff", "12"),  # byte-order mark (also removed by the browser)
+        ("\x1c5\x85", "5"),  # Python-only whitespace characters (the browser trims them too)
         ("", ""),
         ("   ", ""),
     ],
@@ -96,7 +98,15 @@ def test_parse_decimal_invalid(raw):
 
 @pytest.mark.parametrize(
     ("raw", "places"),
-    [("2.50", 1), ("45.000", 0), ("0.125", 3), ("100", 0), ("0", 0), ("0.001", 3), ("10.10", 1), ("1.005", 3)],
+    [
+        ("2.50", 1), ("45.000", 0), ("0.125", 3), ("100", 0), ("0", 0), ("0.000", 0), ("0.001", 3), ("10.10", 1),
+        ("1.005", 3),
+        # More than 28 significant digits: counting must not round (Python's default precision is 28).
+        ("1.0049999999999999999999999999", 28),
+        ("1.0099999999999999999999999999", 28),
+        ("12.000000000000000000000000000000", 0),
+        ("12345678901234567890123456789012", 0),
+    ],
 )
 def test_decimal_places(raw, places):
     assert decimal_places(Decimal(raw)) == places
