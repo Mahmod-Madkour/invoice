@@ -54,10 +54,18 @@ RUN groupadd --system --gid 10001 app \
     && useradd --system --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app
 USER app
 
-ENV PORT=8000
+# The app user has no home directory; give fontconfig a writable cache location.
+ENV PORT=8000 \
+    XDG_CACHE_HOME=/tmp/.cache
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD python -c "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ.get(\"PORT\", \"8000\")}/healthz', timeout=4)" || exit 1
 
-CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --workers 2 --proxy-headers --forwarded-allow-ips=\"${FORWARDED_ALLOW_IPS:-*}\""]
+# One worker (owner decision): the rate limiter and the render semaphore live in memory, so a
+# single process keeps them exact (10 PDFs/min/IP, 2 renders at a time).
+# --proxy-headers: the client IP comes from X-Forwarded-For only when the request arrives from an
+# address in FORWARDED_ALLOW_IPS. With compose.yml the app is reachable only from Caddy on a private
+# network, so "*" trusts nothing else; Cloud Run's front end also needs "*".
+# --no-access-log: the app writes its own access log (never bodies or item contents).
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --workers 1 --proxy-headers --forwarded-allow-ips=\"${FORWARDED_ALLOW_IPS:-*}\" --no-access-log"]

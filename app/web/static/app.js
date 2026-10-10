@@ -40,6 +40,7 @@
     tooManyItems: "عدد الأصناف أكبر من الحد المسموح",
     dateInvalid: "التاريخ غير صالح",
     busy: "الخادم مشغول، حاول مرة أخرى بعد قليل",
+    tooLarge: "حجم الطلب أكبر من الحد المسموح",
     network: "تعذر الاتصال بالخادم، تحقق من الاتصال وحاول مرة أخرى",
     unexpected: "حدث خطأ غير متوقع، حاول مرة أخرى",
     confirmClear: "هل تريد مسح جميع الأصناف؟",
@@ -500,6 +501,8 @@
         return;
       } else if (response.status === 429 || response.status === 503) {
         serverMessages = [MSG.busy];
+      } else if (response.status === 413) {
+        serverMessages = [MSG.tooLarge]; // may come from Caddy, with an empty body
       } else {
         serverMessages = [(await errorMessageFrom(response)) || MSG.unexpected];
       }

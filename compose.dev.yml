@@ -3,6 +3,8 @@
 #   docker compose -f compose.dev.yml run --rm tests        # run the test suite
 #   docker compose -f compose.dev.yml run --rm tests python scripts/render_samples.py
 
+name: invoice-dev  # separate from the production project ("invoice", compose.yml)
+
 x-dev: &dev
   build:
     context: .

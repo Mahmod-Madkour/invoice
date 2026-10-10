@@ -1,0 +1,54 @@
+# Production stack: the app behind Caddy (automatic HTTPS).
+#   cp .env.example .env        # then set DOMAIN (and anything else) in .env
+#   docker compose up -d --build
+#
+# The app is not published on any host port: it sits on a private, internal-only network
+# that only Caddy can reach (and it has no outbound internet access).
+
+name: invoice
+
+services:
+  app:
+    build:
+      context: .
+      target: prod
+    image: invoice-app:latest
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # certificates and keys — keep across restarts
+      - caddy_config:/config
+    networks:
+      - internal
+      - web
+
+networks:
+  internal:
+    internal: true  # no route to the outside world
+  web: {}
+
+volumes:
+  caddy_data:
+  caddy_config:

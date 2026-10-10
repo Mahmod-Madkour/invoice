@@ -1,0 +1,34 @@
+# Caddy 2 — HTTPS reverse proxy for the invoice app.
+# DOMAIN comes from .env (via compose.yml). For a real domain (e.g. myinvoice.duckdns.org)
+# Caddy obtains a Let's Encrypt certificate automatically; "localhost" uses Caddy's local CA.
+
+{
+	servers {
+		timeouts {
+			read_header 10s
+			read_body 30s
+			write 120s # a 1000-item PDF can take ~10–20 s to render on a small VM
+			idle 2m
+		}
+	}
+}
+
+{$DOMAIN} {
+	encode gzip
+
+	request_body {
+		max_size 256KB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	reverse_proxy app:8000 {
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 90s
+		}
+	}
+}
