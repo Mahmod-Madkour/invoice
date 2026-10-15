@@ -4,7 +4,7 @@ A small web page for making a simple Arabic (right-to-left) invoice: type the it
 update live, and save a clean **A4 landscape** PDF. It runs entirely in the browser — no server, no
 account, no installation. Nothing you type is sent anywhere or stored.
 
-**Live:** `https://YOUR-GITHUB-NAME.github.io/YOUR-REPOSITORY/` *(see [Publish on GitHub Pages](#publish-on-github-pages))*
+**Live:** https://mahmod-madkour.github.io/invoice/
 
 ---
 
