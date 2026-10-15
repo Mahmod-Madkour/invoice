@@ -35,8 +35,13 @@
 
 .page {
   position: relative;
-  width: 297mm;
-  height: 209.5mm;          /* a hair under 210 mm so a page never spills onto a blank one */
+  /* A full A4 sheet — but never larger than the printable area. When a printer or the print
+     window keeps a small margin, Chrome shrinks the page to fit (in print, 100vw × 100vh is the
+     printable area) instead of pushing the bottom line («صفحة X من Y») onto an extra page.
+     Firefox ignores vh here and uses the mm size, which fits its "Save to PDF" exactly. */
+  width: min(297mm, 100vw);
+  height: min(209.5mm, 100vh); /* a hair under 210 mm so a page never spills onto a blank one */
+  margin: 0 auto;
   padding: 8mm 8mm 12mm;
   box-sizing: border-box;
   overflow: hidden;
@@ -83,7 +88,7 @@
 .items {
   position: absolute;
   top: 15mm;
-  width: 138.5mm;
+  width: calc((100% - 4mm) / 2);  /* 138.5 mm on a full sheet; narrower if the printable area is */
   table-layout: fixed;
   border-collapse: collapse;
   border: 0.8pt solid #000;
@@ -91,16 +96,19 @@
 .items--right { right: 0; }
 .items--left { left: 0; }
 
-.col-name { width: 58.5mm; }
-.col-qty { width: 20mm; }
-.col-price { width: 22.5mm; }
-.col-disc { width: 13mm; }
-.col-total { width: 24.5mm; }
+/* 58.5 / 20 / 22.5 / 13 / 24.5 mm of a 138.5 mm table */
+.col-name { width: 42.238%; }
+.col-qty { width: 14.440%; }
+.col-price { width: 16.245%; }
+.col-disc { width: 9.386%; }
+.col-total { width: 17.691%; }
 
-.items tr { height: 7mm; }
+/* 7 mm rows on a full sheet. If the printable area is shorter, the 22 rows share the difference,
+   so the table shrinks with the page instead of running into the grand total. */
+.items tr { height: calc(7mm - (209.5mm - min(209.5mm, 100vh)) / 22); }
 .items th,
 .items td {
-  height: 7mm;
+  height: calc(7mm - (209.5mm - min(209.5mm, 100vh)) / 22);
   padding: 0 1.1mm;
   border: 0.4pt solid #555;
   white-space: nowrap;

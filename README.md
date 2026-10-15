@@ -20,7 +20,8 @@ account, no installation. Nothing you type is sent anywhere or stored.
    - **Chrome / Edge:** *Destination* → **Save as PDF** («حفظ بتنسيق PDF») → **Save**.
    - **Firefox:** choose **Save to PDF**.
    - Paper size (A4 landscape) is set automatically, and the file name is `invoice-YYYY-MM-DD.pdf`.
-   You can also print straight to paper from the same window.
+   You can also print straight to paper from the same window. If the printer or the print window keeps a
+   margin, the invoice shrinks slightly to fit, so nothing spills onto an extra page.
 
 Other actions: **×** deletes a row (an «تراجع» undo button appears for 5 seconds); **مسح الكل** clears
 everything after asking.
@@ -72,16 +73,6 @@ python3 -m http.server 8000      # Windows: py -m http.server 8000
 
 Then open http://localhost:8000. (VS Code's *Live Server* extension works too.)
 
-## Tests
-
-The rules and pagination have automated tests. With [Node.js](https://nodejs.org) 22 or newer:
-
-```bash
-node --test
-```
-
-Nothing to install. The same tests run on GitHub on every push (`.github/workflows/tests.yml`).
-
 ---
 
 ## Files
@@ -96,8 +87,7 @@ assets/js/invoice.js       builds the printable pages
 assets/js/app.js           the editor: rows, keyboard, live totals, «إنشاء PDF»
 assets/vendor/big.js       big.js 7.0.1 (exact decimal math, MIT)
 assets/fonts/              Noto Sans Arabic + Noto Sans (SIL Open Font License)
-tests/                     node --test files and sample invoices (fixtures)
-docs/PROJECT_SPEC.md       the original specification
+.nojekyll                  tells GitHub Pages to serve the files as they are
 ```
 
 The first version of this project was a server application (Python, FastAPI, WeasyPrint, Docker,
