@@ -87,7 +87,6 @@ assets/js/invoice.js       builds the printable pages
 assets/js/app.js           the editor: rows, keyboard, live totals, «إنشاء PDF»
 assets/vendor/big.js       big.js 7.0.1 (exact decimal math, MIT)
 assets/fonts/              Noto Sans Arabic + Noto Sans (SIL Open Font License)
-.nojekyll                  tells GitHub Pages to serve the files as they are
 ```
 
 The first version of this project was a server application (Python, FastAPI, WeasyPrint, Docker,
