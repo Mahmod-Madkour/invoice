@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>فاتورة</title>
-  <link rel="stylesheet" href="/static/app.css">
-  <script src="/static/vendor/big.min.js" defer></script>
-  <script src="/static/app.js" defer></script>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/invoice.css">
+  <script type="module" src="assets/js/app.js"></script>
 </head>
-<body data-max-items="{{ max_items }}" data-rows-per-page="{{ rows_per_page }}">
+<body>
   <header class="topbar">
     <h1 class="title">فاتورة</h1>
     <div class="date-field">
@@ -50,10 +52,13 @@
       <span class="stat-label">الإجمالي الكلي:</span>
       <bdi dir="ltr" id="grand-total">0.00</bdi>
     </div>
-    <button type="button" id="generate" class="btn btn-primary" disabled>
-      <span class="spinner" aria-hidden="true" hidden></span>
-      <span class="btn-label">إنشاء PDF</span>
-    </button>
+    <div class="generate">
+      <button type="button" id="generate" class="btn btn-primary" disabled>
+        <span class="spinner" aria-hidden="true" hidden></span>
+        <span class="btn-label">إنشاء PDF</span>
+      </button>
+      <span class="hint">في نافذة الطباعة اختر «حفظ بتنسيق PDF»</span>
+    </div>
   </footer>
 
   <div class="toast" id="toast" role="status" hidden>
@@ -90,5 +95,8 @@
       </td>
     </tr>
   </template>
+
+  <!-- The printable invoice is built here when «إنشاء PDF» is clicked; it is only visible when printing. -->
+  <div id="print-root" aria-hidden="true"></div>
 </body>
 </html>

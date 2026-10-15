@@ -1,5 +1,5 @@
 Copyright 2022 The Noto Project Authors (https://github.com/notofonts/arabic)
-  - NotoSansArabic-Regular.ttf, NotoSansArabic-Bold.ttf, NotoNaskhArabic-Regular.ttf, NotoNaskhArabic-Bold.ttf
+  - NotoSansArabic-Regular.ttf, NotoSansArabic-Bold.ttf
 Copyright 2022 The Noto Project Authors (https://github.com/notofonts/latin-greek-cyrillic)
   - NotoSans-Regular.ttf, NotoSans-Bold.ttf
 

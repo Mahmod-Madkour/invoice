@@ -1,51 +1,56 @@
 /*
- * Invoice PDF — A4 landscape, Arabic RTL (spec §8; measurements approved in Phase 0).
+ * Printable invoice — A4 landscape, Arabic RTL (approved Phase 0 design).
+ * Hidden on screen; when printing, only #print-root is printed ("Save as PDF" in the print window).
  *
- * Every page is a fixed-height block whose children are absolutely positioned, so the
- * header, both tables and the summary band sit at exactly the same place on every page.
+ * Every page is a fixed 297 × 210 mm block; its parts are absolutely positioned, so the header,
+ * both tables and the summary band sit at exactly the same place on every page.
  *
  *   page body (281 × 190 mm inside 8/8/12 mm margins)
  *   ├── header band          top 0,      12 mm
  *   ├── tables               top 15 mm,  138.5 mm wide each, 4 mm gap (first = right)
- *   └── summary band         bottom 0,   12 mm (filled on the last page only)
- *   page number: bottom margin box
+ *   └── summary band         bottom 0,   12 mm (grand total, last page only)
+ *   page number              in the bottom margin
  */
 
-@font-face { font-family: "Noto Sans Arabic"; font-weight: 400; src: url("fonts/NotoSansArabic-Regular.ttf"); }
-@font-face { font-family: "Noto Sans Arabic"; font-weight: 700; src: url("fonts/NotoSansArabic-Bold.ttf"); }
-@font-face { font-family: "Noto Sans"; font-weight: 400; src: url("fonts/NotoSans-Regular.ttf"); }
-@font-face { font-family: "Noto Sans"; font-weight: 700; src: url("fonts/NotoSans-Bold.ttf"); }
+#print-root { display: none; }
 
 @page {
   size: A4 landscape;
-  margin: 8mm 8mm 12mm 8mm;
+  margin: 0;
+}
 
-  @bottom-center {
-    content: "صفحة " counter(page) " من " counter(pages);
-    font-family: "Noto Sans Arabic", "Noto Sans", sans-serif;
-    font-size: 8.5pt;
-    color: #333;
-    direction: rtl;
-    vertical-align: middle;
+@media print {
+  html, body {
+    display: block !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
   }
+  body > :not(#print-root) { display: none !important; }
+  #print-root { display: block; }
 }
-
-html {
-  font-family: "Noto Sans Arabic", "Noto Sans", sans-serif;
-  font-size: 8.5pt;
-  color: #000;
-}
-
-body { margin: 0; }
 
 /* ---------------------------------------------------------------- page block */
 
 .page {
   position: relative;
-  height: 189.5mm;          /* 210 − 8 − 12, minus 0.5 mm so a page never spills over */
+  width: 297mm;
+  height: 209.5mm;          /* a hair under 210 mm so a page never spills onto a blank one */
+  padding: 8mm 8mm 12mm;
+  box-sizing: border-box;
+  overflow: hidden;
   break-after: page;
+  background: #fff;
+  color: #000;
+  font-family: "Noto Sans Arabic", "Noto Sans", sans-serif;
+  font-size: 8.5pt;
+  line-height: 1.2;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact; /* keep the light header/footer shading when printing */
 }
 .page:last-child { break-after: auto; }
+.page-body { position: relative; height: 100%; }
 
 /* ---------------------------------------------------------------- header band */
 
@@ -92,15 +97,15 @@ body { margin: 0; }
 .col-disc { width: 13mm; }
 .col-total { width: 24.5mm; }
 
+.items tr { height: 7mm; }
 .items th,
 .items td {
-  height: 7mm;              /* overridden from the view model when ROWS_PER_TABLE changes */
+  height: 7mm;
   padding: 0 1.1mm;
   border: 0.4pt solid #555;
   white-space: nowrap;
   overflow: hidden;
   vertical-align: middle;
-  line-height: 1.2;
 }
 
 .items th {
@@ -110,17 +115,16 @@ body { margin: 0; }
   border-bottom: 0.8pt solid #000;
 }
 
-.items td.name { text-align: right; }
-/* WeasyPrint's text-overflow is broken for RTL lines: only pure-LTR names get an ellipsis;
-   names containing Arabic simply clip at their end. */
-.items td.name[dir="ltr"] { text-overflow: ellipsis; }
+/* Names never wrap; a name too wide for its column ends with "…". */
+.items td.name {
+  text-align: right;
+  text-overflow: ellipsis;
+}
 
 .items td.num {
-  text-align: right;        /* decimal points line up (approved in Phase 0) */
+  text-align: right;        /* decimal points line up */
   font-variant-numeric: tabular-nums;
 }
-/* Numbers sit in <bdi dir="ltr">. WeasyPrint ignores `unicode-bidi`, but each number is the only
-   content of its cell/span, so the bidi algorithm keeps "12.5%", "1,250.50" and dates in order. */
 
 .items tfoot td {
   font-weight: 700;
@@ -154,4 +158,17 @@ body { margin: 0; }
 .grand-total .amount {
   margin-right: 6mm;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- page number */
+
+.page-number {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4mm;
+  margin: 0;
+  text-align: center;
+  font-size: 8.5pt;
+  color: #333;
 }

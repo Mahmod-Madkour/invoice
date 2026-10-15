@@ -1,9 +1,9 @@
-/* Invoice editor — Arabic RTL, desktop-first (spec §9). Fonts are the bundled TTFs, served locally. */
+/* Invoice editor — Arabic RTL, desktop-first. Fonts are the bundled TTFs in assets/fonts (no CDN). */
 
-@font-face { font-family: "Noto Sans Arabic"; font-weight: 400; font-display: swap; src: url("/fonts/NotoSansArabic-Regular.ttf") format("truetype"); }
-@font-face { font-family: "Noto Sans Arabic"; font-weight: 700; font-display: swap; src: url("/fonts/NotoSansArabic-Bold.ttf") format("truetype"); }
-@font-face { font-family: "Noto Sans"; font-weight: 400; font-display: swap; src: url("/fonts/NotoSans-Regular.ttf") format("truetype"); }
-@font-face { font-family: "Noto Sans"; font-weight: 700; font-display: swap; src: url("/fonts/NotoSans-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Noto Sans Arabic"; font-weight: 400; font-display: swap; src: url("../fonts/NotoSansArabic-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Noto Sans Arabic"; font-weight: 700; font-display: swap; src: url("../fonts/NotoSansArabic-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Noto Sans"; font-weight: 400; font-display: swap; src: url("../fonts/NotoSans-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Noto Sans"; font-weight: 700; font-display: swap; src: url("../fonts/NotoSans-Bold.ttf") format("truetype"); }
 
 :root {
   --bg: #f4f5f7;
@@ -185,6 +185,8 @@ bdi[dir="ltr"], .num { font-variant-numeric: tabular-nums; }
 .stat { color: var(--text); white-space: nowrap; }
 .stat-label { color: var(--muted); }
 .grand { margin-inline-start: auto; font-size: 18px; font-weight: 700; white-space: nowrap; }
+.generate { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.hint { color: var(--muted); font-size: 12px; white-space: nowrap; }
 .grand .stat-label { font-weight: 400; font-size: 15px; }
 
 .error-count {
@@ -249,5 +251,5 @@ bdi[dir="ltr"], .num { font-variant-numeric: tabular-nums; }
   body { font-size: 14px; }
   .topbar, .content, .footer-bar { padding-left: 12px; padding-right: 12px; }
   .grand { margin-inline-start: 0; }
-  .footer-bar .btn-primary { width: 100%; justify-content: center; }
+  .generate, .footer-bar .btn-primary { width: 100%; justify-content: center; }
 }

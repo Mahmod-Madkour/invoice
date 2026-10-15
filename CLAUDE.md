@@ -1,60 +1,44 @@
-# CLAUDE.md — Arabic RTL Invoice PDF Generator
+# CLAUDE.md — Arabic RTL Invoice → PDF (static site)
 
-Full reference: [docs/PROJECT_SPEC.md](docs/PROJECT_SPEC.md). **Do not change any decision there without asking the owner first.**
-If something in the spec is impossible or wrong, explain and propose an alternative — never silently deviate. Do not invent features.
+Original spec: [docs/PROJECT_SPEC.md](docs/PROJECT_SPEC.md). **Owner decision 2026-10-15:** the app is a **static site**
+(HTML/CSS/vanilla JS, no server, no Docker), published on **GitHub Pages**, for 1–3 users. The spec's business rules and
+the approved PDF design still apply; its server/API/Docker/hosting/limits sections do not. The complete server version
+(FastAPI + WeasyPrint + Docker + Caddy) is preserved on branch **`server-version`**.
+Do not change any decision below without asking the owner. Do not invent features.
 
 ## How to work
-- Work phase by phase (spec §16). Stop at every 🛑 CHECKPOINT and wait for approval.
-- Verify, don't assume: run the tests after every change; for any PDF change, render to PNG (`pdftoppm`) and look at the pages
-  (connected Arabic letters, correct RTL order, intact numbers, aligned rows/columns).
-- Dev host is Linux, but host Python is 3.10 → **run and test everything in Docker** (`compose.dev.yml`).
-- One or more meaningful git commits per phase.
+- Verify, don't assume: run `node --test` after every change (Node 22+; no npm, no package.json, no build step).
+- For any change to the printed invoice, check Chrome's real print output (headless Chrome `page.pdf()` with
+  `preferCSSPageSize`), render pages to PNG with `pdftoppm` and look at them: connected Arabic, RTL order, intact numbers,
+  aligned rows/columns, page count.
+- Serve locally with `python3 -m http.server` (module scripts don't run from `file://`).
 
-## Fixed business rules (§2)
-- Simple commercial invoice, title **"فاتورة"**. **No VAT. Header = date only** (no invoice no., customer, company, logo).
-- Discount: **percentage only**, 0–100, default 0. Quantity: > 0, ≤ 3 decimals. Price: ≥ 0, ≤ 2 decimals. Name: required, ≤ **40** chars after trim.
-- **Western digits** everywhere (`1,250.50`). **No currency symbol anywhere.**
-- **20 rows per table, 2 tables per page side by side; first table on the RIGHT.** Partial tables padded with empty ruled rows to 20.
-- Each table footer: running total **"الإجمالي المتراكم"** (cumulative through that table).
-- Grand total **"الإجمالي الكلي"** on the **last page only**. Page numbers **"صفحة X من Y"**. Paper **A4 landscape**.
-- Public, no password (optional `APP_PASSWORD` Basic Auth exists, empty = off). Hosting: Oracle Always Free Arm VM + Docker + Caddy + DuckDNS; Cloud Run fallback.
+## Business rules (spec §2, unchanged)
+- Simple invoice, title **"فاتورة"**. **No VAT.** Header = **date only**. **Western digits** (`1,250.50`). **No currency symbol.**
+- Discount **percent only** 0–100 (≤ 2 decimals, empty = 0). Quantity > 0, ≤ 3 decimals, ≤ 1,000,000.
+  Price ≥ 0, ≤ 2 decimals, ≤ 10,000,000. Name required, ≤ **40** chars after trim. 1–1000 items.
+  Line total and grand total ≤ 999,999,999.99. Arabic error messages as in spec §6. Completely empty rows are ignored.
+- **20 rows per table, 2 tables per page, first table on the RIGHT**; partial tables padded with empty ruled rows.
+- Table footer **"الإجمالي المتراكم"** (running total); **"الإجمالي الكلي"** on the **last page only**; **"صفحة X من Y"**; **A4 landscape**.
+- Arabic-Indic digits typed **inside names are kept as typed**; numeric fields are normalized.
 
-## Approved Phase 0 PDF design (owner-approved 2026-10-04 — supersedes the §8 starting values)
-- Font: **Noto Sans Arabic** (+ Noto Sans fallback). Naskh is bundled but not used.
-- A4 landscape, margins **8 mm top/sides, 12 mm bottom** (page number lives in the bottom margin).
-- Body text **8.5 pt**; rows **7 mm** (header + 20 + footer); cell padding 1.1 mm.
-- Tables **138.5 mm** wide, **4 mm** gap. Columns: name 58.5, qty 20, price 22.5, discount 13, total 24.5 mm.
-- Layout by **absolute positioning** inside a fixed-height page block (floats are unreliable in WeasyPrint).
-- Numeric columns **right-aligned** (decimal points line up), tabular nums, each number in `<bdi dir="ltr">`.
-- Zero discount prints **`0%`**.
-- Name overflow safety net: WeasyPrint's `text-overflow: ellipsis` is broken for RTL lines, so names with no Arabic
-  letters get `dir="ltr"` + ellipsis; names containing Arabic stay RTL and clip at their end (no ellipsis).
+## Money rules
+- Never JS numbers for money: big.js decimals built from **strings** (`assets/vendor/big.js`).
+- Line total = (qty × price − qty × price × disc/100) rounded **once** to 0.01 half-up; all running/grand totals are sums
+  of rounded line totals. The editor's live totals and the PDF use the same functions (`assets/js/rules.js`).
 
-## Later owner decisions (2026-10-10)
-- **One uvicorn worker** (not the spec's 2): the rate limiter and render semaphore are in memory, so one process keeps them exact.
-- The optional **GitHub Actions** workflow (`.github/workflows/tests.yml`) was approved.
-- Arabic-Indic digits typed **inside item names are kept as typed** (only numeric fields are normalized).
-- The Dockerfile uses **no BuildKit-only features** (no `RUN --mount`), so it also builds with the classic builder (Cloud Build).
+## Approved PDF design (owner-approved 2026-10-04; `assets/css/invoice.css`)
+- Font **Noto Sans Arabic** (+ Noto Sans for Latin), bundled TTFs only — no CDN, no Google Fonts.
+- A4 landscape, margins **8 mm top/sides, 12 mm bottom**; body **8.5 pt**; rows **7 mm**; cell padding 1.1 mm.
+- Tables **138.5 mm** wide, **4 mm** gap; columns name 58.5, qty 20, price 22.5, discount 13, total 24.5 mm.
+- Absolute positioning inside fixed-size page blocks (positions identical on every page).
+- Numeric columns **right-aligned**, tabular nums, each number in `<bdi dir="ltr">`. Zero discount prints **`0%`**.
+- Names: one line, `text-overflow: ellipsis` (browsers handle RTL correctly); names without Arabic letters get `dir="ltr"`.
 
-## Stack (§3)
-- Python 3.12, FastAPI + Uvicorn, Pydantic v2 (`Decimal`), Jinja2 (autoescape ON), WeasyPrint, vanilla JS + vendored `big.js`.
-- Fonts: bundled Noto Sans Arabic + Noto Sans TTFs (+ OFL) via `@font-face` only.
-- Tests: pytest, hypothesis, pypdf, FastAPI TestClient. Pin all Python deps to exact versions.
-- **Forbidden:** Django, React/Vue/any frontend framework, npm/build step, any database/ORM, accounts, sessions,
-  Celery/background workers, CDN assets, internet-loaded Google Fonts, **`float` for money**, localStorage/drafts.
-
-## Money & architecture rules
-- `Decimal` everywhere, constructed **only from strings**; client sends numbers as JSON strings.
-- Line total = (qty × price − qty × price × disc/100) quantized 0.01 `ROUND_HALF_UP`, rounded once per line.
-  All running/grand totals are sums of rounded line totals. Server recomputes everything; derived fields are never accepted.
-- `app/domain` is pure Python (no FastAPI/WeasyPrint). `api` and `pdf` depend on `domain`, never the reverse.
-- Templates contain **no arithmetic and no formatting** — only pre-formatted strings from `pdf/viewmodel.py`.
-
-## Security & limits (§11) — mandatory
-- `MAX_ITEMS` 1000; max body **256 KB** (Caddy **and** app); **10 PDF req/min/IP** in-memory sliding window → 429 (Arabic msg);
-  trust `X-Forwarded-For` only via trusted proxy (uvicorn `--proxy-headers --forwarded-allow-ips`).
-- Max **2** concurrent renders (semaphore); no slot within ~10 s → 503.
-- Headers: CSP `default-src 'self'`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `frame-ancestors 'none'`; HSTS at Caddy.
-- WeasyPrint gets a custom `url_fetcher` allowing **only** the local asset dir. Render in memory; never write PDFs to disk.
-- Never log request bodies or item contents (method, path, status, duration, item count only).
-- Container runs as **non-root**. No inline `<script>`/event handlers (CSP). PDF endpoint is plain `def` (threadpool).
+## Architecture
+- `assets/js/rules.js` (pure: validation, math, formatting) ← `pagination.js` ← `invoice.js` (DOM, `textContent` only —
+  never `innerHTML` with user text) ← `app.js` (editor). ES modules, relative paths (works under a Pages sub-path).
+- PDF = browser print: «إنشاء PDF» renders `#print-root`, loads fonts, sets `document.title` to `invoice-YYYY-MM-DD`
+  (suggested file name), calls `window.print()`; `@media print` shows only the invoice.
+- No storage of any kind (no localStorage, cookies, analytics), no network requests except the site's own files.
+  CSP via `<meta http-equiv>` (`default-src 'self'`); no inline scripts or event handlers.

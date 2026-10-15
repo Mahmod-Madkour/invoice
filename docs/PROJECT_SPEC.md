@@ -1,5 +1,11 @@
 # Project Brief for Claude Code — Arabic RTL Invoice PDF Generator
 
+> **Status (2026-10-15):** the owner changed the architecture to a **static website** (HTML/CSS/JavaScript, no server,
+> no Docker) published on GitHub Pages, for one to three users. The business rules (§2, §5–§7) and the approved PDF
+> design still apply; the server, API, security-limit, Docker, configuration, hosting and deployment sections
+> (§3 stack, §10–§14) describe the earlier server version, which is preserved on the git branch `server-version`.
+> See [CLAUDE.md](../CLAUDE.md) and the [README](../README.md) for the current design.
+
 You are acting as a **Senior Software Architect and Senior Python Developer**. Build the complete project described below, phase by phase. Every decision in this document was agreed with the project owner after a full requirements and architecture review. **Do not change any decision in this document without asking first.**
 
 ---

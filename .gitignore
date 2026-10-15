@@ -1,21 +1,8 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
-venv/
-.pytest_cache/
-.hypothesis/
-.coverage
-htmlcov/
-.mypy_cache/
-.ruff_cache/
-
-# Generated samples (scripts/render_samples.py, spike)
+# Generated sample PDFs / screenshots (local checks only)
 samples/
 
-# Local configuration / secrets
-.env
+# Local tooling
+node_modules/
 
 # Editors / OS
 .vscode/
